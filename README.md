@@ -165,7 +165,7 @@ The reason I mention this is because you will notice slight differences with the
 
 But let's give it a try to see what your experience is in your environment.
 
-Modify your existing AppDelegate file to match the following:
+Modify your existing AppDelegate methods to match the following:
 
 ```objective-c
 
@@ -321,7 +321,7 @@ This is the type of scenario you need to be aware of ahead of time while you dev
 
 Sometimes you want to pass multiple script parameters to a script, and the SDK has a very nice and easy process for doing so.
 
-Modify your existing `triggerScript_didFinishLaunchingWithOptions` method to match the following:
+Modify your existing AppDelegate methods to match the following:
 
 ```objective-c
 - (void)triggerScript_didFinishLaunchingWithOptions:(NSTimer *)timer {
@@ -342,16 +342,12 @@ Modify your existing `triggerScript_didFinishLaunchingWithOptions` method to mat
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"MyAppDelegate: %s  Calling FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions", __func__);
 
-    NSDictionary<NSString *, NSString *> *variables = @ {
-        @"$a": @"Value of $a",
-        @"$z": @"Value of $z"
-        };
-
-    if (FMX_Queue_Script(@"<myFMdbName>", @"appDelegate_didFinishLaunchingWithOptions", kFMXT_Pause, @"A script param", variables)) {
-        NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Succeeded");
-    } else {
-        NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Failed");
-    }
+    // FIAS needs a little time to begin responding to script requests, so add a slight delay
+    [NSTimer scheduledTimerWithTimeInterval: 10.0
+                                     target: self
+                                   selector: @selector(triggerScript_didFinishLaunchingWithOptions:)
+                                   userInfo: nil
+                                    repeats: NO];
 
     return true;
 }
