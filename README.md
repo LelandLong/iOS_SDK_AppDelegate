@@ -571,7 +571,7 @@ Then modify your existing `triggerScript_didFinishLaunchingWithOptions` method t
 }
 ```
 
-Now modify your `` method to match the following:
+Now modify your `didFinishLaunchingWithOptions` method to match the following:
 
 ```objective-c
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -597,7 +597,7 @@ Now modify your `` method to match the following:
 }
 ```
 
-Then modify your FileMaker Script `` to match the following:
+Then modify your FileMaker Script `AppDelegate_didFinishLaunchingWithOptions` to match the following:
 
 ```objective-c
 #========================================
