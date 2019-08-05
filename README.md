@@ -321,9 +321,24 @@ This is the type of scenario you need to be aware of ahead of time while you dev
 
 Sometimes you want to pass multiple script parameters to a script, and the SDK has a very nice and easy process for doing so.
 
-Modify your existing `didFinishLaunchingWithOptions` method to match the following:
+Modify your existing `triggerScript_didFinishLaunchingWithOptions` method to match the following:
 
 ```objective-c
+- (void)triggerScript_didFinishLaunchingWithOptions:(NSTimer *)timer {
+    NSLog(@"MyAppDelegate: %s", __func__);
+
+    NSDictionary<NSString *, NSString *> *variables = @ {
+        @"$a": @"Value of $a",
+        @"$z": @"Value of $z"
+        };
+
+    if (FMX_Queue_Script(@"<myFMdbName>", @"appDelegate_didFinishLaunchingWithOptions", kFMXT_Pause, @"ima script param", variables)) {
+        NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Succeeded");
+    } else {
+        NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Failed");
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"MyAppDelegate: %s  Calling FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions", __func__);
 
@@ -512,15 +527,123 @@ Whatever you enter into this `Identifier` field is the name of the variable you 
 
 - - -
 
-### Placeholder
+### Extracting the Settings.app User Data Into Xcode AppDelegate
 
-Placeholder
+Modify your existing AppDelegate code (the interface section near the top of the file) to match the following:
+
+```objective-c
+@interface MyAppDelegate : UIResponder <UIApplicationDelegate>
+{
+    NSString *settingsUsername;
+    NSString *settingsPassword;
+    NSString *settingsDatasource;
+}
+@property (strong, nonatomic) UIWindow *window;
+@end
+```
+
+Then modify your existing `triggerScript_didFinishLaunchingWithOptions` method to match the following:
+
+```objective-c
+- (void)triggerScript_didFinishLaunchingWithOptions:(NSTimer *)timer {
+    NSLog(@"MyAppDelegate: %s", __func__);
+
+    if (settingsUsername == nil) {
+        settingsUsername = @"";
+    }
+    if (settingsPassword == nil) {
+        settingsPassword = @"";
+    }
+    if (settingsDatasource == nil) {
+        settingsDatasource = @"<invalid>";
+    }
+
+    NSDictionary<NSString *, NSString *> *variables = @ {
+        @"$username": settingsUsername,
+        @"$password": settingsPassword
+        };
+
+    if (FMX_Queue_Script(@"<myFMdbName>", @"appDelegate_didFinishLaunchingWithOptions", kFMXT_Pause, settingsDatasource, variables)) {
+        NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Succeeded");
+    } else {
+        NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Failed");
+    }
+}
+```
+
+Now modify your `` method to match the following:
+
+```objective-c
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    NSLog(@"MyAppDelegate: %s", __func__);
+
+    // FIAS needs a little time to begin responding to script requests, so add a slight delay
+    [NSTimer scheduledTimerWithTimeInterval: 10.0
+                                     target: self
+                                   selector: @selector(triggerScript_didFinishLaunchingWithOptions:)
+                                   userInfo: nil
+                                    repeats: NO];
+
+    // Pulling data from Settings
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    settingsUsername = [defaults objectForKey:kUserNameKey];
+    settingsPassword = [defaults objectForKey:kPasswordKey];
+    settingsDatasource = [defaults objectForKey:kDatasourceKey];
+    NSLog(@"MyAppDelegate - standardUserDefaults - username: %@", settingsUsername);
+    NSLog(@"MyAppDelegate - standardUserDefaults - password: %@", settingsPassword);
+    NSLog(@"MyAppDelegate - standardUserDefaults - datasource: %@", settingsDatasource);
+
+    return true;
+}
+```
+
+Then modify your FileMaker Script `` to match the following:
+
+```objective-c
+#========================================
+#	Purpose:     FIAS AppDelegate - triggered by delegate method
+#	Returns:     none
+#	Parameters:  scriptParameter (optional)
+#	             iOS variables (optional)
+#	Called from: (FIAS) didFinishLaunchingWithOptions
+#	Author:      Leland Long
+#	Notes:       none
+#	History:     2019-07-29 Leland Long - created
+#========================================
+
+Allow User Abort [ Off ]
+Set Error Capture [ On ]
+
+Set Variable [ $param; Value:Get ( ScriptParameter ) ]
+Show Custom Dialog [ Title: "AppDelegate";
+                     Message: "Script triggered in db: " &
+                     Get ( ScriptName ) & "¶" &
+                     "Param: " & $param & "¶" &
+                     "sdk_$username: " & $username & "¶" &
+                     "sdk_$password: " & $password
+                     Default Button: "Excellent",
+                     Commit: “Yes” ]
+
+```
+
+Before running your app, go back into the Settings.app and enter in some random values into those 3 fields so that they are not blank.
+
+Then close the Settings.app and return to Xcode.
+
+Now Run your project.
+
+If all went well you should have seen the user-entered Settings values show up in the Console and inside the Custom Dialog in the App itself.
 
 - - -
 
-### Placeholder
+### Conclusion
 
-Placeholder
+You now should have completed what we set out to do.
+There are several ways you can customize these examples to match what you would like to do in your own app.
+
+Hopefully this has been a helpful and in-depth guide on putting the AppDelegate to work for you in a useful and meaningful way.
+
+Happy FileMaking.
 
 - - -
 
@@ -560,7 +683,7 @@ For example:
         [myTimer invalidate];
         myTimer = nil;
 
-        if (FMX_Queue_Script(@"SurfacesCG", @"appDelegate_didFinishLaunchingWithOptions", kFMXT_Pause, @"none", nil)) {
+        if (FMX_Queue_Script(@"<myFMdbName>", @"appDelegate_didFinishLaunchingWithOptions", kFMXT_Pause, @"none", nil)) {
                 NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Succeeded");
             } else {
                 NSLog(@"MyAppDelegate: FMX_Queue_Script appDelegate_didFinishLaunchingWithOptions Failed");
