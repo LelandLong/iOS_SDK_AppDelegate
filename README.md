@@ -23,7 +23,7 @@ How to create and utilize native iOS Preferences functionality (in the Apple-pro
 * Implement App Delegate Methods to communicate with FileMaker database
 * Add a 'Settings bundle' file that defines the preferences to display
 * Verify the Settings data is accessible by the App Delegate
-* Verify the Settings data can be shared with a Filemaker script
+* Verify the Settings data can be shared with a FileMaker script
 
 - - -
 
@@ -55,8 +55,6 @@ Use the following code in your App Delegate file as a starting point.
 
 @interface MyAppDelegate : UIResponder <UIApplicationDelegate>
 {
-    NSString *settingsUsername;
-    NSString *settingsPassword;
 }
 @property (strong, nonatomic) UIWindow *window;
 @end
@@ -88,8 +86,8 @@ Note: to show the Console, type Command + Shift + c
 
 - - -
 
-### FileMaker: Create a Filemaker Script
-Open your FIAS database locally in Filemaker Pro.
+### FileMaker: Create a FileMaker Script
+Open your FIAS database locally in FileMaker Pro.
 Create a new Script, using any naming convention you wish. For the following examples we will use the script name 'AppDelegate_didFinishLaunchingWithOptions'.
 
 
