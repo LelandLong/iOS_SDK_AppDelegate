@@ -407,7 +407,7 @@ As an example, here would be the adjustment to that NSDictionary code in order t
 
 ### The iOS Settings App
 
-First off, here is a quote from Apples Human Interface Guidelines, regarding the Settings App and it's intended purpose:
+First off, here is a quote from Apple's Human Interface Guidelines, regarding the Settings App and it's intended purpose:
 
 > Expose infrequently changed configuration options in Settings.
 The Settings app is a central location for making configuration changes throughout the system, but people must leave your app to get there.
