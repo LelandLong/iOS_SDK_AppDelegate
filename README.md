@@ -508,6 +508,7 @@ Now if you go back to Xcode and look at the `Root.plist` file using the Property
 The field option that is key to Xcode being able to communicate with these fields is labeled `Identifier`.
 Whatever you enter into this `Identifier` field is the name of the variable you will use to pass the user-entered data into your code, and eventually into FileMaker as a parameter.
 
+![bundle plist image](/images/bundle_plist.png)*Settings.bundle Root.plist*
 
 - - -
 
