@@ -202,7 +202,7 @@ Build and run the project. When it runs the console should display the 2 NSLog e
 If it runs successfully you will see the success message in the Console and you will also see the Custom Dialog appear in your App, that you added previously in your Script.
 You should also see that your Script Parameter was successfully passed to the Script.
 
-![didFinishLaunching image](/images/didFinishLaunchingWithOptions.png)*didFinishLaunching script*
+![didFinishLaunching image](/images/didFinishLaunching.png)*didFinishLaunching script*
 
 If it still did not trigger successfully, try increasing the TimeInterval value from 2.0 to 4.0, or 6.0, or whatever you want to try , in order to determine the sweet spot of a small enough value to work every time.
 My own experience has resulted in a 2.0 second delay for the Simulator and a 10.0 second delay in my iPhone XSMax running on iOS v13 beta.
