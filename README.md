@@ -52,6 +52,7 @@ Use the following code in your App Delegate file as a starting point.
 
 #define kUserNameKey            @"username_preference"
 #define kPasswordKey            @"password_preference"
+#define kDatasourceKey          @"datasource_preference"
 
 @interface MyAppDelegate : UIResponder <UIApplicationDelegate>
 {
